@@ -1,0 +1,60 @@
+PacMan README
+
+Overview:
+- In my PacMan game, I have 13 classes which include App, BoardCoordinate, Direction Enum class, Dot, Energizer, Game,
+Ghost, Modes Enum Class, Pacman, PaneOrganizer, SmartSquare, Constants, and Collidable interface class.
+- My Dot,  Energizer, and Ghost wrapper classes implement the collidable interface which contains the ifCollide and
+addToScore methods. Each one overrides these methods.
+- My PacMan wrapper class contains pacman's movement methods that are called in the game class.
+- The Ghost class contains the Breadth First Search, move and collide methods. The BFS method has a helper method which
+adds valid neighboring squares to the queue. The BFS calculates the closest distance and direction to the target passed and returns
+it to be used when calling the move method.
+- The Game class handles mpst of the game logic as it is responsible for the timeline, mode switching, score updating,
+releasing fo the ghost pen, etc.
+- The SmartSquare class is a wrapper class of a rectangle. It contains an arraylist of type collidable.
+- The Modes Enum class has the different game modes: CHASE,  SCATTER, and FRIGHTED. It has a method to retrieve the duration
+of each mode.
+- The Direction Enum class has the different game directions: LEFT, RIGHT, UP, DOWN. It contains methods to get neighboring
+rows and columns based on the direction.
+
+
+
+Design Choices:
+- I have a colliable interface class that has a collide and addToScore method. This interface was created since the dots,
+energizers, and the ghosts all have a co0mmonality: collide with pacman.
+- I decided to create enum classes for the direction and modes of the game since these are constant values throughout the
+game. In my directions enum class, I have methods to get the neighboring row and col since this is helpful when checking
+neighbor and move validity.
+- The ifCollide and addToScore methods take in the game as a parameter as it calls methods that the game class has. For example,
+the ifCollide method in the energizer class calls the setFrightened method from the game class since when the energizer is
+collided with pacman, the mode should be changed to frightened. Since the game has the instance variable keeping track of
+the current mode and mode counter, the ifCollide method takes in the game to be able to set the mode accordingly. The game
+parameter also allows the ghost class to call certain collide methods depending on the current mode retrieved from the game
+class.
+- The ghosts' move method takes in a direction as a parameter since depeending on the direction that the ghost is moving in,
+the ghost will move a certain way. Furthermore, this allows for the different modes to use the same move method. Since
+the bfs that chase and scatter use returns a direction (closest direction to target), the ghosts are able to call eh bfs method
+within the move parameter to move towards the target. On teh other hand, frightened mode dows not have a target and thus
+a BoardCoordinate Target parameter would not make sense. Since frightened mode makes the ghosts move at a random direction,
+the random direction returned from teh getRandDirection method can be passed in.
+- Pacman's move and wrapper methods are found inside the pacman class since they refer to pacman's functionality. However,
+they take in a Direction and SmartSquares[][] parameter. This is because the movement of pacman depends on the current direction
+it is moving in and the validity of the squares (both of which are kept track of in the game class).
+- The ghosts mode methods are found in the game class despite it referring to the ghosts' functionality since the game class
+has access to all instances of the ghost. Furthermore, it allows each ghost to be given a different target/direction to
+move to.
+- The resetting of the ghost pen is also a method found in the game class since the game class has the queue of ghosts (ghost pen)
+as well as it being able to set the individual ghosts to their starting location.
+
+
+Known Bugs:
+- There are some instances in which pacman collides with a ghost that is not there. Thus, the collide method for the ghost
+is called.
+- Left tunnel wrapping for the ghost does not work and will set the ghost's location to the square next to the left tunnel.
+
+
+Debugging Collaborators:
+TA's.
+
+
+Hours Spent: 126 hours :(
